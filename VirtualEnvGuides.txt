@@ -1,0 +1,109 @@
+sudo pacman -Syy
+sudo pacman -S --needed --noconfirm python-pip python-setuptools python-virtualenv
+sudo pacman -S --needed --noconfirm python2-pip python2-setuptools python2-virtualenv python-virtualenvwrapper
+
+source /usr/bin/virtualenvwrapper.sh
+add it to your .basrc or .zshrc
+
+echo "source /usr/bin/virtualenvwrapper.sh" >> `.bashrc`
+
+Python isntall  (unknown public key B26995E310250568)
+One or more PGP signatures could not be verified!
+gpg --recv-key
+
+-------------------------------------------------------------------
+
+Here is how to autostart scripts:
+                                                                                                       
+Create a new file in "/etc/systemd/system/" (e.g. script.service) and add the following contents:
+
+[Unit]
+Description=Script
+
+[Service]
+ExecStart=/usr/bin/script
+
+[Install]
+WantedBy=multi-user.target 
+put your script in "/usr/bin/" and make sure to make it executable. and then enable the service.
+
+$ sudo chmod 755 /usr/bin/script
+$ sudo systemctl enable script.service
+The next time yout restart the script should autostart
+
+If you want the script to run without restarting, type:
+
+$ sudo systemctl start script.service
+
+add following to ~/.xprofile
+   xrandr --newmode "1680x1050"  146.25  1680 1784 1960 2240  1050 1053 1059 1089 -hsync +vsync
+   xrandr --addmode VGA-1 1680x1050
+   xrandr --output VGA-1 --mode 1680x1050
+run sudo chmod +x .xprofile
+restart
+reset from display settings menu to retain resolution
+
+
+Last edited by tunnelrat (2017-04-02 15:44:02)
+
+-------------------------------------------------------------------
+
+https://forum.manjaro.org/t/xrandr-cannot-change-resolution/21172
+https://www.youtube.com/watch?v=65Wq4fjREUU Setup Neovim like an IDE - YouTube
+https://www.barbarianmeetscoding.com/boost-your-coding-fu-with-vscode-and-vim/moving-blazingly-fast-with-the-core-vim-motions/ 
+https://www.youtube.com/watch?v=Kx-SDJwL01o Switching to Neovim & Rebuilding my Configuration - YouTube
+-------------------------------------------------------------------
+
+NVim Guides
+http://vim.fisadev.com/
+https://github.com/prabirshrestha/vim-lsp
+https://github.com/dense-analysis/ale#faq-autocmd
+https://jdhao.github.io/2019/11/20/neovim_builtin_lsp_hands_on/
+https://gist.github.com/sadovnik/b0c4e48057ec0952bf7d08440d1cdfa7
+
+
+MatchTagAlways unavailable: requires python.
+Press ENTER or type command to continue
+Solution: https://gist.github.com/sadovnik/b0c4e48057ec0952bf7d08440d1cdfa7
+
+-------------------------------------------------------------------
+
+:q to quit (short for :quit)
+:q! to quit without saving (short for :quit!)
+:wq to write and quit
+:wq! to write and quit even if file has only read permission (if file does not have write permission: force write)
+:x to write and quit (similar to :wq, but only write if there are changes)
+:exit to write and exit (same as :x)
+:qa to quit all (short for :quitall)
+:cq to quit without saving and make Vim return non-zero error (i.e. exit with error)
+You can also exit Vim directly from "Normal mode" by typing ZZ to save and quit (same as :x) or ZQ to just quit (same as :q!). (Note that case is important here. ZZ and zz do not mean the same thing.)
+
+https://github.com/tonsky/FiraCode
+
+
+Semantic Commit Messages https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
+See how a minor change to your commit message style can make you a better programmer.
+
+Format: <type>(<scope>): <subject>
+
+<scope> is optional
+
+Example
+feat: add hat wobble
+^--^  ^------------^
+|     |
+|     +-> Summary in present tense.
+|
++-------> Type: chore, docs, feat, fix, refactor, style, or test.
+More Examples:
+
+feat: (new feature for the user, not a new feature for build script)
+fix: (bug fix for the user, not a fix to a build script)
+docs: (changes to the documentation)
+style: (formatting, missing semi colons, etc; no production code change)
+refactor: (refactoring production code, eg. renaming a variable)
+test: (adding missing tests, refactoring tests; no production code change)
+chore: (updating grunt tasks etc; no production code change)
+
+
+
