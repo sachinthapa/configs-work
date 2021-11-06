@@ -15,9 +15,9 @@ PROCESS = True
 # program/process names and corresponding gylphs
 guis = OrderedDict({
     'terminals': '',
-    'chromes': '',
-    'brave': 'Br',
-    'firefox': '#',
+    'chromes': '',
+    'brave': '',
+    'firefox': '',
     'filemanager': '',
     'remote-desktop': '#',
     'pdfviewer': '#',
@@ -25,11 +25,11 @@ guis = OrderedDict({
 })
 
 processes = OrderedDict({
-    'vims': '',
-    'ssh': '#',
-    'kitty': '',
-    'updater': '#',
-    'thunar': ''
+    'vims': '',
+    'ssh': 'SSH',
+    'kitty': '',
+    'updater': 'U',
+    'thunar': ''
 })
 
 # combine counts of program/process names in the tuple
@@ -97,7 +97,7 @@ if GUI:
         try:
             c = gui_counts[k]
             if c:
-                gui_output += '%s %i ' % (v, c)
+                gui_output += '%s %i  ' % (v, c)
         except:
             pass
 
@@ -139,7 +139,7 @@ if PROCESS:
         try:
             c = process_counts[k]
             if c:
-                process_output += '%s %i ' % (v, c)
+                process_output += '%s  %i  ' % (v, c)
         except:
             pass
 

@@ -26,8 +26,17 @@ rock_03 = #47555F
 rock_04 = #50626D
 rock_05 = #5A707E
 rock_06 = #668192
-;rock_07 = #CDFFFC
-rock_07 = #8EFF6C
+rock_07 = #CDFFFC
+
+palette01 = #3DB2FF
+palette0 = #CDFFFC
+palette1 = #FFE6E6
+palette2 = #FFABE1
+palette3 = #A685E2
+palette4 = #6155A6
+palette5 = #2940D3
+palette6 = #FFC764
+
 
 [bar/sky]
 monitor = VGA-1
@@ -58,24 +67,19 @@ override-redirect = true
 ;Update Fonts: fc-cache -f -v
 ;match font name fc-match myfont:weight=bold:size=14
 
-#font-3 = Font Awesome 5 Free:style=Regular:pixelsize=7;1
-#font-4 = Font Awesome 5 Free:style=Solid:pixelsize=7;1
-#font-5 = Font Awesome 5 Brands:pixelsize=7;1
-
-font-0 = fixed:pixelsize=9:weight=bold;0
-font-1 = unifont:fontformat=truetype:size=9:weight=bold:antialias=true;0
-font-2 = Wuncon siji:pixelsize=9;1
-
-#font-3 = IcoMoon\-Ultimate:style=Regular:size=10:pixelsize=10;1
-font-3 = Ionicons:style=Medium:size15:pixelsize=15;1
-font-4 = SpaceMono Nerd Font:style=Regular:size=15:pixelsize=15;1
-#font-5 = SpaceMono Nerd Font Mono:style=Regular:size=14:pixelsize=14;1
-
-#font-4 = Material Icons Outlined:style=Regular;size=10;pixelsize=10;1
+font-0 = Font Awesome 5 Free:style=Regular:pixelsize=10;1
+font-1 = Font Awesome 5 Free:style=Solid:pixelsize=10;1
+font-2 = Font Awesome 5 Brands:pixelsize=10;1
+font-3 = fixed:pixelsize=8:weight=bold;0
+font-4 = unifont:fontformat=truetype:size=8:weight=bold:antialias=false;0
+font-5 = Wuncon siji:pixelsize=8;1
+font-6 = Material Icons Outlined:style=Regular;size=10;pixelsize=10;1
+font-7 = SpaceMono Nerd Font:style=Regular;size=10;pixelsize=10;1
+font-8 = SpaceMono Nerd Font Mono:style=Regular;size=10;pixelsize=10;1
 
 modules-left = bspwm 
 modules-center = info-softwarecounter 
-modules-right = eth alsa date time powermenu
+modules-right = eth alsa date time
 
 tray-position = right
 ;tray-background = ${colors.background}
@@ -88,33 +92,9 @@ tray-maxsize = 15
 ;tray-padding = 2
 wm-restack = bspwm 
 
-
-#dependencies yad xdotool
-[module/popup-calendar]
-type = custom/script
-exec = ~/.config/polybar/pop-calendar.sh
-interval = 5
-click-left = ~/.config/polybar/pop-calendar.sh --popup
-
-[module/round-right]
-type = custom/text
-content = %{T5}%{T-}
-content-foreground = ${colors.rock_06}
-
-[module/arrow1]
-; grey to Blue
-type = custom/text
-content = "%{T2} %{T-}"
-content-font = 2
-content-foreground = #8d62a9
-content-background = #292d3e
-
-
 [module/info-softwarecounter]
 type = custom/script
 exec = ~/.config/polybar/info-softwarecounter.py
-format-foreground = ${colors.rock_07}
-format-padding = 4
 interval = 10
 label-maxlen = 25
 #format-color = ${colors.rock_07}
@@ -129,20 +109,20 @@ margin-top = 0
 type = internal/bspwm
 format = <label-state>
 
-ws-icon-0 = I;%{F#F44A2A}%{T11}%{T-}
-ws-icon-1 = II;%{F#93ECB2}%{T11}%{T-}
-ws-icon-2 = III;%{F#794521}%{T11}%{T-}
-ws-icon-3 = IV;%{F#04B1FF}%{T11}%{T-}
-ws-icon-4 = V;%{F#E9C026}%{T11}%{T-}
+;ws-icon-2 = III;
+;ws-icon-1 = II;
+;ws-icon-0 = I;
+;ws-icon-3 = IV;
+ws-icon-default =  
 
 label-focused = %icon%
 label-focused-background = ${colors.rock_00}
-label-focused-foreground = ${colors.rock_07}
+label-focused-foreground = ${colors.rock_06}
 label-focused-underline = ${colors.rock_07}
 label-focused-padding = 2
 
-label-occupied = %icon%
-label-occupied-background = ${colors.rock_00}
+label-occupied = 
+#label-occupied-background = ${colors.rock_06}
 label-occupied-foreground = ${colors.rock_07}
 label-occupied-underline = ${colors.rock_00}
 label-occupied-padding = 2
@@ -159,13 +139,13 @@ interval = 1.0
 
 ;format-connected-underline = #00ADB5
 format-connected = <label-connected>
-label-connected = 
+label-connected = 
 ;label-connected-background = ${colors.background}
 label-connected-foreground = ${colors.rock_07}
 label-connected-padding = 1
 
 format-disconnected = <label-disconnected>
-label-disconnected = 
+label-disconnected = 
 ;label-disconnected-background = ${colors.alert}
 label-disconnected-foreground = ${colors.rock_06} 
 label-disconnected-padding = 1
@@ -223,7 +203,8 @@ type = internal/date
 ;date = " %d-%m-%Y%"
 ;date-alt = " %d/%m/%Y"
 date = %A, %d %B
-format-prefix = 
+format-prefix = 
+;
 format-foreground = ${colors.rock_07}
 format-prefix-foreground = ${colors.rock_07}
 label = %date% 
@@ -235,11 +216,11 @@ format-underline = ${colors.rock_06}
 type = internal/date
 interval = 1
 time = %H:%M
-format-prefix = 
+format-prefix = 
 label = %time%
 format-foreground = ${colors.rock_07}
 format-prefix-foreground = ${colors.rock_07}
-format-prefix-padding-right = 2
+format-prefix-padding-right = 1
 format-underline = ${colors.rock_06}
 ;${colors.palette3}
 
@@ -256,11 +237,11 @@ label-volume-underline = ${colors.secondary}
 [module/alsa]
 type = internal/alsa
 format-volume = <label-volume> <bar-volume>
-label-volume = 
-label-volume-foreground = ${colors.rock_07}
+label-volume = 
+label-volume-foreground = ${colors.palette0}
 format-muted = <label-muted> <bar-volume>
 format-muted-foreground = ${colors.rock_06}
-label-muted = 
+label-muted = 
 bar-volume-width = 6
 bar-volume-foreground-0 = ${colors.rock_07}
 bar-volume-foreground-1 = ${colors.rock_07}
@@ -272,9 +253,9 @@ bar-volume-foreground-6 = ${colors.rock_07}
 bar-volume-gradient = false
 bar-volume-indicator =
 bar-volume-indicator-font = 1
-bar-volume-fill = 
+bar-volume-fill = 
 bar-volume-fill-font = 1
-bar-volume-empty = 
+bar-volume-empty = 
 bar-volume-empty-font = 1
 bar-volume-empty-foreground = ${colors.rock_05}
 
@@ -295,6 +276,16 @@ bar-volume-empty-foreground = ${colors.rock_05}
 type = custom/script
 exec = ~/.config/polybar/headphone.sh
 tail = true
+
+[module/round-right]
+type = custom/text
+content = %{T5}%{T-}
+content-foreground = ${colors.palette0}
+
+[module/margin]
+type = custom/text
+content = %{T5}%{T-}
+content-foreground = #00000000
 
 [module/xbacklight]
 type = internal/xbacklight
@@ -392,16 +383,16 @@ type = custom/menu
 expand-right = true
 format-spacing = 1
 
-label-open = 
-label-open-foreground = #FE0021
-label-close = 
-label-close-foreground = ${colors.rock_07}
+label-open = 
+label-open-foreground = ${colors.secondary}
+label-close =  cancel
+label-close-foreground = ${colors.secondary}
 label-separator = |
-label-separator-foreground = ${colors.rock_07}
+label-separator-foreground = ${colors.foreground-alt}
 
-menu-0-0 = 
+menu-0-0 = reboot
 menu-0-0-exec = menu-open-1
-menu-0-1 = 
+menu-0-1 = power off
 menu-0-1-exec = menu-open-2
 
 menu-1-0 = cancel
@@ -409,7 +400,7 @@ menu-1-0-exec = menu-open-0
 menu-1-1 = reboot
 menu-1-1-exec = sudo reboot
 
-menu-2-0 = poweroff
+menu-2-0 = power off
 menu-2-0-exec = sudo poweroff
 menu-2-1 = cancel
 menu-2-1-exec = menu-open-0
