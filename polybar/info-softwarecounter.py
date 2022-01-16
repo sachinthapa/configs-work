@@ -22,6 +22,7 @@ guis = OrderedDict({
     'remote-desktop': '#',
     'pdfviewer': '#',
     'image': '#',
+    'Timetracko': "Tr"
 })
 
 processes = OrderedDict({
@@ -139,7 +140,7 @@ if PROCESS:
         try:
             c = process_counts[k]
             if c:
-                process_output += '%s  %i  ' % (v, c)
+                process_output += '%s %i  ' % (v, c)
         except:
             pass
 

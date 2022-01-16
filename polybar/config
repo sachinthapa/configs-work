@@ -19,15 +19,16 @@
 [colors]
 ;background = ${xrdb:color0:#222}
 
-rock_00 = #292A2C
+;rock_00 = #B3292A2C
+rock_00 = #B3073127
 rock_01 = #32373B
 rock_02 = #3C454B
 rock_03 = #47555F
 rock_04 = #50626D
 rock_05 = #5A707E
-rock_06 = #668192
+rock_06 = #136337
 ;rock_07 = #CDFFFC
-rock_07 = #8EFF6C
+rock_07 = #73C398
 
 [bar/sky]
 monitor = VGA-1
@@ -35,22 +36,22 @@ width = 90%
 height = 27
 offset-x = 5%
 offset-y = .9%
-radius = 6.0
+;radius = 6.0
 fixed-center = true
-border-bottom-size = 0
+;border-bottom-size = 0
 background = ${colors.rock_00}
 foreground = ${colors.rock_06}
 
 line-size = 3
 line-color = #f00
 
-#border-size = 0
-#border-color = #00000000
+;border-size = 1
+;border-color = ${colors.rock_02}
 
-padding-left = 2
+;padding-left = 2
 padding-right = 2
 
-module-margin-left = 2
+;module-margin-left = 2
 module-margin-right = 2
 override-redirect = true
 
@@ -58,36 +59,47 @@ override-redirect = true
 ;Update Fonts: fc-cache -f -v
 ;match font name fc-match myfont:weight=bold:size=14
 
-#font-3 = Font Awesome 5 Free:style=Regular:pixelsize=7;1
+;font-7 = Font Awesome 5 Free:style=Regular:pixelsize=7;1
 #font-4 = Font Awesome 5 Free:style=Solid:pixelsize=7;1
 #font-5 = Font Awesome 5 Brands:pixelsize=7;1
 
-font-0 = fixed:pixelsize=9:weight=bold;0
-font-1 = unifont:fontformat=truetype:size=9:weight=bold:antialias=true;0
-font-2 = Wuncon siji:pixelsize=9;1
+font-0 = Hack:style=Regular:pixelsize=9;2
+font-1 = fixed:pixelsize=9:weight=bold;1
+font-2 = unifont:fontformat=truetype:size=9:weight=bold:antialias=true;1
+font-3 = Wuncon siji:pixelsize=9;1
 
 #font-3 = IcoMoon\-Ultimate:style=Regular:size=10:pixelsize=10;1
-font-3 = Ionicons:style=Medium:size15:pixelsize=15;1
-font-4 = SpaceMono Nerd Font:style=Regular:size=15:pixelsize=15;1
+font-4 = Ionicons:style=Medium:size=12:pixelsize=12;2
+font-5 = SpaceMono Nerd Font:style=Regular:size=14:pixelsize=14;4
+;font-6 = Noto Color Emoji:style=Regular:size=14:pixelsize=14:scale=10;4
 #font-5 = SpaceMono Nerd Font Mono:style=Regular:size=14:pixelsize=14;1
 
 #font-4 = Material Icons Outlined:style=Regular;size=10;pixelsize=10;1
 
-modules-left = bspwm 
+modules-left = bspwm polywins
 modules-center = info-softwarecounter 
 modules-right = eth alsa date time powermenu
 
 tray-position = right
-;tray-background = ${colors.background}
+tray-background = ${colors.rock_00}
+#0000ffff
 tray-detached = false
 tray-radius = 4
-tray-maxsize = 15
+;tray-maxsize = 15
 ;tray-sclae = 5
 ;tray-offset-x = 10 
 ;tray-offset-y = 0
-;tray-padding = 2
+tray-padding = 2
 wm-restack = bspwm 
 
+[module/polywins]
+type = custom/script
+exec = ~/.config/polybar/polywins.sh 2>/dev/null
+format = <label>
+format-foreground = ${colors.rock_07}
+label = %output%
+label-padding = 1
+tail = true
 
 #dependencies yad xdotool
 [module/popup-calendar]
@@ -116,7 +128,7 @@ exec = ~/.config/polybar/info-softwarecounter.py
 format-foreground = ${colors.rock_07}
 format-padding = 4
 interval = 10
-label-maxlen = 25
+label-maxlen = 29
 #format-color = ${colors.rock_07}
 
 [global/wm] 
@@ -130,10 +142,11 @@ type = internal/bspwm
 format = <label-state>
 
 ws-icon-0 = I;%{F#F44A2A}%{T11}%{T-}
-ws-icon-1 = II;%{F#93ECB2}%{T11}%{T-}
+ws-icon-1 = II;%{F#519D7B}%{T11}%{T-}
 ws-icon-2 = III;%{F#794521}%{T11}%{T-}
 ws-icon-3 = IV;%{F#04B1FF}%{T11}%{T-}
-ws-icon-4 = V;%{F#E9C026}%{T11}%{T-}
+ws-icon-4 = V;%{F#D41EAC}%{T11}%{T-}
+ws-icon-5 = VI;%{F#ffdf00}%{T11}%{T-}
 
 label-focused = %icon%
 label-focused-background = ${colors.rock_00}
@@ -144,7 +157,7 @@ label-focused-padding = 2
 label-occupied = %icon%
 label-occupied-background = ${colors.rock_00}
 label-occupied-foreground = ${colors.rock_07}
-label-occupied-underline = ${colors.rock_00}
+;label-occupied-underline = ${colors.rock_00}
 label-occupied-padding = 2
 
 label-empty = %icon%
@@ -224,12 +237,14 @@ type = internal/date
 ;date-alt = " %d/%m/%Y"
 date = %A, %d %B
 format-prefix = 
+format-padding = 2
+;format-background = ${colors.rock_03}
 format-foreground = ${colors.rock_07}
 format-prefix-foreground = ${colors.rock_07}
 label = %date% 
 format-prefix-padding-right = 1
-format-underline = ${colors.rock_06} 
-;${colors.palette5}
+;format-underline = ${colors.rock_06} 
+;${colors.palette52}
 
 [module/time]
 type = internal/date
@@ -239,9 +254,38 @@ format-prefix = 
 label = %time%
 format-foreground = ${colors.rock_07}
 format-prefix-foreground = ${colors.rock_07}
-format-prefix-padding-right = 2
-format-underline = ${colors.rock_06}
+format-prefix-padding-right = 1
+;format-underline = ${colors.rock_06}
 ;${colors.palette3}
+
+[module/powermenu]
+type = custom/menu
+expand-right = true
+format-spacing = 1
+
+label-open = ⏻
+label-open-foreground = #FE0021
+label-close = 
+label-close-foreground = ${colors.rock_07}
+label-separator =  | 
+label-separator-foreground = ${colors.rock_07}
+
+menu-0-0 = 累
+menu-0-0-exec = reboot
+menu-0-0-foreground = ${colors.rock_07}
+menu-0-1 = 襤
+menu-0-1-exec = poweroff
+menu-0-1-foreground = ${colors.rock_07}
+
+menu-1-0 = cancel
+menu-1-0-exec = menu-open-0
+menu-1-1 = reboot
+menu-1-1-exec = reboot
+
+menu-2-0 = poweroff
+menu-2-0-exec = poweroff
+menu-2-1 = cancel
+menu-2-1-exec = menu-open-0
 
 [module/pulseaudio]
 type = internal/pulseaudio
@@ -261,7 +305,7 @@ label-volume-foreground = ${colors.rock_07}
 format-muted = <label-muted> <bar-volume>
 format-muted-foreground = ${colors.rock_06}
 label-muted = 
-bar-volume-width = 6
+bar-volume-width = 7
 bar-volume-foreground-0 = ${colors.rock_07}
 bar-volume-foreground-1 = ${colors.rock_07}
 bar-volume-foreground-2 = ${colors.rock_07}
@@ -270,13 +314,13 @@ bar-volume-foreground-4 = ${colors.rock_07}
 bar-volume-foreground-5 = ${colors.rock_07}
 bar-volume-foreground-6 = ${colors.rock_07} 
 bar-volume-gradient = false
-bar-volume-indicator =
+bar-volume-indicator= 
 bar-volume-indicator-font = 1
-bar-volume-fill = 
-bar-volume-fill-font = 1
-bar-volume-empty = 
+bar-volume-fill = ∎
+bar-volume-fill-font = 10
+bar-volume-empty = ∎
 bar-volume-empty-font = 1
-bar-volume-empty-foreground = ${colors.rock_05}
+bar-volume-empty-foreground = ${colors.rock_06}
 
 [module/mpd]
 ;type = internal/mpd
@@ -387,32 +431,6 @@ label-unmounted-foreground = ${colors.foreground-alt}
 ;ramp-signal-3 = 
 ;ramp-signal-4 = 
 ;ramp-signal-foreground = ${colors.foreground-alt}
-[module/powermenu]
-type = custom/menu
-expand-right = true
-format-spacing = 1
-
-label-open = 
-label-open-foreground = #FE0021
-label-close = 
-label-close-foreground = ${colors.rock_07}
-label-separator = |
-label-separator-foreground = ${colors.rock_07}
-
-menu-0-0 = 
-menu-0-0-exec = menu-open-1
-menu-0-1 = 
-menu-0-1-exec = menu-open-2
-
-menu-1-0 = cancel
-menu-1-0-exec = menu-open-0
-menu-1-1 = reboot
-menu-1-1-exec = sudo reboot
-
-menu-2-0 = poweroff
-menu-2-0-exec = sudo poweroff
-menu-2-1 = cancel
-menu-2-1-exec = menu-open-0
 
 [settings]
 screenchange-reload = true
@@ -420,6 +438,6 @@ screenchange-reload = true
 ;compositing-background = screen
 ;compositing-foreground = source
 ;compositing-border = over
-;pseudo-transparency = false
+pseudo-transparency = true
 
 ; vim:ft=dosini
