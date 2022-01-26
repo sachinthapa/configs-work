@@ -64,7 +64,7 @@ let g:python3_host_prog = '/home/sachint/VEnvs/nvim/bin/python'
 " Adaptation of one-light and one-dark colorschemes for Vim
 "Plug 'rakr/vim-one'
 " Light & Dark Vim color schemes inspired by Google's Material Design
-Plug 'NLKNguyen/papercolor-theme'
+"Plug 'NLKNguyen/papercolor-theme'
 " Blue-based vim colorscheme
 "Plug 'relastle/bluewery.vim'
 " Tokyo at night based theme
@@ -117,9 +117,6 @@ Plug 'Shougo/context_filetype.vim'
 
 " Indent text object                                                                             
 Plug 'michaeljsmith/vim-indent-object'                                                           
-
-" Yank history navigation                                                                        
-Plug 'vim-scripts/YankRing.vim'                                                                  
 
 " Yank history navigation                                                                        
 Plug 'vim-scripts/YankRing.vim'
@@ -236,6 +233,32 @@ else
     colorscheme delek
 endif
 
+" Airline ------------------------------                                                         
+let g:airline_powerline_fonts = 0                                                                
+let g:airline_theme = 'deus'                                                                
+let g:airline#extensions#whitespace#enabled = 0                                                  
+"let g:airline#extensions#hunks#enabled = 1                                                      
+let g:airline#extensions#branch#enabled=1                                                        
+
+" Fancy Symbols!!                                                                                
+if fancy_symbols_enabled                                                                         
+  let g:webdevicons_enable = 1                                                                 
+                                                                                               
+  """ custom airline symbols                                                                     
+  if !exists('g:airline_symbols')                                                              
+     let g:airline_symbols = {}                                                                
+  endif                                                                                        
+  let g:airline_left_sep = ''                                                                 
+  let g:airline_left_alt_sep = ''                                                             
+  let g:airline_right_sep = ''                                                                
+  let g:airline_right_alt_sep = ''                                                            
+  let g:airline_symbols.branch = '⭠'                                                           
+  let g:airline_symbols.readonly = '⭤'                                                         
+  let g:airline_symbols.linenr = '⭡'                                                           
+else                                                                                             
+  let g:webdevicons_enable = 0                                                                 
+endif                                                                                            
+
 
 " file finder mapping
 nmap ,e :Files<CR>
@@ -258,6 +281,8 @@ nmap ,wF :execute ":Lines " . expand('<cword>')<CR>
 " commands finder mapping
 nmap ,c :Commands<CR>
 
+let g:omni_sql_no_default_maps = 1
+
 lua << EOF
 
 require('nvim_cmp.nvimcmp')
@@ -279,8 +304,8 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  -- buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  -- buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
@@ -290,7 +315,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
-  buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+  -- buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
 end
 
@@ -400,31 +425,10 @@ else
   let g:yankring_history_dir = '~/.vim/dirs/'                                                  
 endif    
 
-" Airline ------------------------------                                                         
-let g:airline_powerline_fonts = 0                                                                
-let g:airline_theme = 'bubblegum'                                                                
-let g:airline#extensions#whitespace#enabled = 0                                                  
-"let g:airline#extensions#hunks#enabled = 1                                                      
-let g:airline#extensions#branch#enabled=1                                                        
-
-" Fancy Symbols!!                                                                                
-if fancy_symbols_enabled                                                                         
-  let g:webdevicons_enable = 1                                                                 
-                                                                                               
-  " custom airline symbols                                                                     
-  if !exists('g:airline_symbols')                                                              
-     let g:airline_symbols = {}                                                                
-  endif                                                                                        
-  let g:airline_left_sep = ''                                                                 
-  let g:airline_left_alt_sep = ''                                                             
-  let g:airline_right_sep = ''                                                                
-  let g:airline_right_alt_sep = ''                                                            
-  let g:airline_symbols.branch = '⭠'                                                           
-  let g:airline_symbols.readonly = '⭤'                                                         
-  let g:airline_symbols.linenr = '⭡'                                                           
-else                                                                                             
-  let g:webdevicons_enable = 0                                                                 
-endif                                                                                            
+:highlight Pmenu guifg=#8D86C2 guibg=#1A1B26
+:highlight PmenuSel guifg=#4FEBEB guibg=#364A82
+:highlight PmenuBar guifg=#white guibg=#black
+:highlight PmenuThumb guifg=#1C1C1C guibg=#FF4F7E
 
 " Custom configurations ----------------
 
