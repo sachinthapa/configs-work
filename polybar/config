@@ -20,15 +20,16 @@
 ;background = ${xrdb:color0:#222}
 
 ;rock_00 = #B3292A2C
-rock_00 = #B3073127
+rock_00 = #29ee0b78
 rock_01 = #32373B
 rock_02 = #3C454B
 rock_03 = #47555F
 rock_04 = #50626D
 rock_05 = #5A707E
-rock_06 = #136337
+rock_06 = #75569fea
 ;rock_07 = #CDFFFC
-rock_07 = #73C398
+rock_07 = #569fea
+
 
 [bar/sky]
 monitor = VGA-1
