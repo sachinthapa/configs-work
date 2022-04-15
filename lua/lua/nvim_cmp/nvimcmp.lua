@@ -28,6 +28,12 @@ cmp.setup ({
         vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
       end,
     },
+    --documentation = {
+      --border = { '', '', '', ' ', '', '', '', ' ' },
+      --winhighlight = 'NormalFloat:NormalFloat,FloatBorder:NormalFloat',
+      --maxwidth = math.floor((WIDE_HEIGHT * 2) * (vim.o.columns / (WIDE_HEIGHT * 2 * 16 / 9))),
+      --maxheight = math.floor(WIDE_HEIGHT * (WIDE_HEIGHT / vim.o.lines)),
+    --},
 
     formatting = {
         format = lspkind.cmp_format({
@@ -51,6 +57,8 @@ cmp.setup ({
         c = cmp.mapping.close(),
       }),
       ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+      ['<C-j>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
+      ['<C-k>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
     },
 
     sources = cmp.config.sources({
@@ -83,6 +91,6 @@ cmp.setup.cmdline(':', {
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
 require('lspconfig')['pylsp'].setup {
-capabilities = capabilities
+    capabilities = capabilities
 }
 
