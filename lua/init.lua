@@ -5,14 +5,14 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
 end
 
-vim.cmd [[
-    augroup Packer
-        autocmd!
-        autocmd BufWritePost init.lua source <afile> | PackerCompile
-    augroup end
-]]
+vim.cmd([[
+  augroup packer_user_config
+    autocmd!
+    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+  augroup end
+]])
 
-vim.g['python3_host_prog'] = '/home/sachint/VEnvs/nvim/bin/python'
+vim.g.python3_host_prog = '/home/sachint/VEnvs/nvim/bin/python'
 
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
@@ -23,21 +23,27 @@ require('packer').startup(function(use)
   use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
   use 'michaeljsmith/vim-indent-object'
   -- inject LSP diagnostics, code actions, and more via Lua
-  use 'jose-elias-alvarez/null-ls.nvim'
-  use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
+  use 'nvim-lua/plenary.nvim'
+  use {"jose-elias-alvarez/null-ls.nvim", requires = { "nvim-lua/plenary.nvim" }}
+
+  --use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
   --use 'ludovicchabant/vim-gutentags' -- Automatic tags management
   -- UI to select things (files, grep results, open buffers...)
-  use 'mjlbach/onedark.nvim' -- vheme inspired by Atom
   use 'ghifarit53/tokyonight-vim'
+  use 'NLKNguyen/papercolor-theme'
+
   use {'nvim-lualine/lualine.nvim', requires = { 'kyazdani42/nvim-web-devicons', opt = true }} -- Fancier statusline
   use 'kyazdani42/nvim-web-devicons'
+  use {'akinsho/bufferline.nvim', tag = "*", requires = 'kyazdani42/nvim-web-devicons'}
+  use 'moll/vim-bbye'
+
 
   -- Add indentation guides even on blank lines
   use 'lukas-reineke/indent-blankline.nvim'
   -- Add git related info in the signs columns and popups
   use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   -- Highlight, edit, and navigate code using a fast incremental parsing library
-  use 'nvim-treesitter/nvim-treesitter'
+  use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
   -- Additional textobjects for treesitter
   use 'nvim-treesitter/nvim-treesitter-textobjects'
   use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
@@ -45,6 +51,8 @@ require('packer').startup(function(use)
   use 'hrsh7th/cmp-nvim-lsp'
   use 'saadparwaiz1/cmp_luasnip'
   use 'L3MON4D3/LuaSnip' -- Snippets plugin
+  use "rafamadriz/friendly-snippets"
+
 end)
 
 --Set highlight on search
@@ -71,9 +79,13 @@ vim.o.updatetime = 250
 vim.wo.signcolumn = 'yes'
 
 --Set colorscheme
-vim.g['tokyonight_style'] = 'storm'
+--vim.g['tokyonight_style'] = 'storm'
+
 vim.o.termguicolors = true
-vim.cmd [[colorscheme tokyonight]]
+vim.o.background= 'dark'
+vim.cmd [[colorscheme PaperColor]]
+
+
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 -- tabs and space handling
@@ -115,9 +127,6 @@ require('lualine').setup {
   extensions = {}
 }
 
---Enable Comment.nvim
-require('Comment').setup()
-
 -- Key bIndings helper function
 local map = function(key)
   -- get the extra options
@@ -146,6 +155,10 @@ vim.g.maplocalleader = ','
 vim.api.nvim_set_keymap('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
 vim.api.nvim_set_keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = true, expr = true, silent = true })
 
+--Bufferline 
+vim.api.nvim_set_keymap('n', '<Leader>q', "<cmd>Bdelete<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>Q', "<cmd>Bwipeout<CR>", { noremap = true, silent = true })
+
 -- Highlight on yank
 vim.cmd [[
   augroup YankHighlight
@@ -159,6 +172,76 @@ vim.g.indent_blankline_char = '┊'
 vim.g.indent_blankline_filetype_exclude = { 'help', 'packer' }
 vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
 vim.g.indent_blankline_show_trailing_blankline_indent = false
+
+-- Budfferline
+require("bufferline").setup{
+  options = {
+    numbers = "none", -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
+    close_command = "Bdelete! %d", -- can be a string | function, see "Mouse actions"
+    right_mouse_command = "Bdelete! %d", -- can be a string | function, see "Mouse actions"
+    left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
+    middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
+    -- NOTE: this plugin is designed with this icon in mind,
+    -- and so changing this is NOT recommended, this is intended
+    -- as an escape hatch for people who cannot bear it for whatever reason
+    indicator_icon = "│",
+    -- indicator_icon = "▎",
+    buffer_close_icon = '',
+    modified_icon = "●",
+    close_icon = "",
+    left_trunc_marker = "",
+    right_trunc_marker = "",
+    --- name_formatter can be used to change the buffer's label in the bufferline.
+    --- Please note some names can/will break the
+    --- bufferline so use this at your discretion knowing that it has
+    --- some limitations that will *NOT* be fixed.
+    -- name_formatter = function(buf)  -- buf contains a "name", "path" and "bufnr"
+    --   -- remove extension from markdown files for example
+    --   if buf.name:match('%.md') then
+    --     return vim.fn.fnamemodify(buf.name, ':t:r')
+    --   end
+    -- end,
+    max_name_length = 30,
+    max_prefix_length = 30, -- prefix used when a buffer is de-duplicated
+    tab_size = 21,
+    diagnostics = false, -- | "nvim_lsp" | "coc",
+    diagnostics_update_in_insert = false,
+    -- diagnostics_indicator = function(count, level, diagnostics_dict, context)
+    --   return "("..count..")"
+    -- end,
+    -- NOTE: this will be called a lot so don't do any heavy processing here
+    -- custom_filter = function(buf_number)
+    --   -- filter out filetypes you don't want to see
+    --   if vim.bo[buf_number].filetype ~= "<i-dont-want-to-see-this>" then
+    --     return true
+    --   end
+    --   -- filter out by buffer name
+    --   if vim.fn.bufname(buf_number) ~= "<buffer-name-I-dont-want>" then
+    --     return true
+    --   end
+    --   -- filter out based on arbitrary rules
+    --   -- e.g. filter out vim wiki buffer from tabline in your work repo
+    --   if vim.fn.getcwd() == "<work-repo>" and vim.bo[buf_number].filetype ~= "wiki" then
+    --     return true
+    --   end
+    -- end,
+    offsets = { { filetype = "NvimTree", text = "", padding = 0 } },
+    show_buffer_icons = true,
+    show_buffer_close_icons = true,
+    show_close_icon = true,
+    show_tab_indicators = true,
+    persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
+    -- can also be a table containing 2 custom separators
+    -- [focused and unfocused]. eg: { '|', '|' }
+    separator_style = "thin", -- | "thick" | "thin" | { 'any', 'any' },
+    enforce_regular_tabs = true,
+    always_show_bufferline = true,
+    -- sort_by = 'id' | 'extension' | 'relative_directory' | 'directory' | 'tabs' | function(buffer_a, buffer_b)
+    --   -- add custom logic
+    --   return buffer_a.modified > buffer_b.modified
+    -- end
+  },
+}
 
 -- Gitsigns
 require('gitsigns').setup {
@@ -224,68 +307,68 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
-require('Comment').setup(
-    {
-        padding = true,
-        sticky = true,
-        ignore = nil,
-        ---LHS of toggle mappings in NORMAL + VISUAL mode
-        toggler = {
-            ---Line-comment toggle keymap
-            line = 'gcc',
-            ---Block-comment toggle keymap
-            block = 'gbc',
-        },
-        ---LHS of operator-pending mappings in NORMAL + VISUAL mode
-        opleader = {
-            ---Line-comment keymap
-            line = 'gc',
-            ---Block-comment keymap
-            block = 'gb',
-        },
-
-        ---LHS of extra mappings
-        ---@type table
-        extra = {
-            ---Add comment on the line above
-            above = 'gcO',
-            ---Add comment on the line below
-            below = 'gco',
-            ---Add comment at the end of line
-            eol = 'gcA',
-        },
-
-        ---Create basic (operator-pending) and extended mappings for NORMAL + VISUAL mode
-        ---@type table
-        mappings = {
-            ---Operator-pending mapping
-            ---Includes `gcc`, `gbc`, `gc[count]{motion}` and `gb[count]{motion}`
-            ---NOTE: These mappings can be changed individually by `opleader` and `toggler` config
-            basic = true,
-            ---Extra mapping
-            ---Includes `gco`, `gcO`, `gcA`
-            extra = true,
-            ---Extended mapping
-            ---Includes `g>`, `g<`, `g>[count]{motion}` and `g<[count]{motion}`
-            extended = false,
-        },
-
-        ---Pre-hook, called before commenting the line
-        ---@type fun(ctx: Ctx):string
-        pre_hook = nil,
-
-        ---Post-hook, called after commenting is done
-        ---@type fun(ctx: Ctx)
-        post_hook = nil,
-    }
-)
+--require('Comment').setup(
+--    {
+--        padding = true,
+--        sticky = true,
+--        ignore = nil,
+--        ---LHS of toggle mappings in NORMAL + VISUAL mode
+--        toggler = {
+--            ---Line-comment toggle keymap
+--            line = 'gcc',
+--            ---Block-comment toggle keymap
+--            block = 'gbc',
+--        },
+--        ---LHS of operator-pending mappings in NORMAL + VISUAL mode
+--        opleader = {
+--            ---Line-comment keymap
+--            line = 'gc',
+--            ---Block-comment keymap
+--            block = 'gb',
+--        },
+--
+--        ---LHS of extra mappings
+--        ---@type table
+--        extra = {
+--            ---Add comment on the line above
+--            above = 'gcO',
+--            ---Add comment on the line below
+--            below = 'gco',
+--            ---Add comment at the end of line
+--            eol = 'gcA',
+--        },
+--
+--        ---Create basic (operator-pending) and extended mappings for NORMAL + VISUAL mode
+--        ---@type table
+--        mappings = {
+--            ---Operator-pending mapping
+--            ---Includes `gcc`, `gbc`, `gc[count]{motion}` and `gb[count]{motion}`
+--            ---NOTE: These mappings can be changed individually by `opleader` and `toggler` config
+--            basic = true,
+--            ---Extra mapping
+--            ---Includes `gco`, `gcO`, `gcA`
+--            extra = true,
+--            ---Extended mapping
+--            ---Includes `g>`, `g<`, `g>[count]{motion}` and `g<[count]{motion}`
+--            extended = false,
+--        },
+--
+--        ---Pre-hook, called before commenting the line
+--        ---@type fun(ctx: Ctx):string
+--        pre_hook = nil,
+--
+--        ---Post-hook, called after commenting is done
+--        ---@type fun(ctx: Ctx)
+--        post_hook = nil,
+--    }
+--)
 
 
 -- Diagnostic keymaps
 vim.api.nvim_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>d', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
 
 -- LSP settings
 local lspconfig = require 'lspconfig'
@@ -304,7 +387,9 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
-  -- vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
+  vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
+  --vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
+
 end
 
 -- nvim-cmp supports additional completion capabilities
@@ -312,7 +397,7 @@ local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
 -- Enable the following language servers
-local servers = { 'pyright'}
+local servers = { 'pyright','tsserver'}
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
@@ -320,7 +405,16 @@ for _, lsp in ipairs(servers) do
   }
 end
 
+require("lspconfig").tsserver.setup({
+    on_attach = function(client)
+        client.resolved_capabilities.document_formatting = false
+        --client.resolved_capabilities.document_range_formatting = false
+    end,
+})
+
 -- luasnip setup
+require("luasnip.loaders.from_vscode").lazy_load()
+
 local luasnip = require 'luasnip'
 local lspkind = require('lsp_kind.lspkind')
 -- nvim-cmp setup
@@ -343,12 +437,10 @@ cmp.setup {
       end
     })
     },
-
     window = {
        completion = cmp.config.window.bordered(),
        documentation = cmp.config.window.bordered(),
     },
-
   mapping = {
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-n>'] = cmp.mapping.select_next_item(),
@@ -363,6 +455,8 @@ cmp.setup {
     ['<Tab>'] = function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
+      elseif luasnip.expandable() then
+        luasnip.expand()
       elseif luasnip.expand_or_jumpable() then
         luasnip.expand_or_jump()
       else
@@ -380,28 +474,51 @@ cmp.setup {
     end,
   },
   sources = {
-    { name = 'nvim_lsp' },
     { name = 'luasnip' },
+    { name = 'buffer' },
+    { name = 'nvim_lsp' },
   },
+  experimental = {
+    ghost_text =  false,
+    native_menu = false,
+  },  
 }
 
 -- Setup Null ls and register source 
 local null_ls = require("null-ls")
-local sources = { null_ls.builtins.diagnostics.flake8 }
+
 local formatting = null_ls.builtins.formatting
 local diagnostic = null_ls.builtins.diagnostics
 
+vim.api.nvim_buf_set_keymap(0,'n', '<Space>f', ':Format<CR>', { noremap = true, silent = true })
+
 null_ls.setup({
+    debug = true,
     sources = {
+        --formatting.stylua,
+        formatting.prettier,
         formatting.black.with({extra_args = {"--fast"}}),
-        formatting.isort.with({extra_args = {"--fast"}}),
-        diagnostic.flake8
+        formatting.isort,
+        diagnostic.eslint,
+        diagnostic.flake8,
     },
+    on_attach = function(client)
+      if client.resolved_capabilities.document_formatting then
+            vim.cmd([[
+            augroup LspFormatting
+                autocmd! * <buffer>
+                autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting()
+            augroup END
+            ]])
+      end
+        if client.resolved_capabilities.document_range_formatting then
+            vim.cmd("xnoremap <silent><buffer> <Space>f :lua vim.lsp.buf.range_formatting()<CR>")
+        end
+    end,
 })
 
-vim.api.nvim_buf_set_keymap(0,'n', '<Space>f', '<cmd>lua vim.lsp.buf.formatting_sync()<CR>', { noremap = true, silent = true })
 
--- vim: ts=2 sts=2 sw=2 et
+--vim.api.nvim_set_keymap('n', '<leader>d', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
 
 -- Additional Key bindings
 map {'n', '//', ':noh<CR>'}
@@ -412,5 +529,4 @@ map {'n', ',o' ,"<cmd>lua require('fzf-lua').oldfiles()<CR>"}
 map {'n', ',wg' ,"<cmd>lua require('fzf-lua').grep()<CR>"}
 map {'n', ',wf' ,"<cmd>lua require('fzf-lua').grep_cword()<CR>"}
 map {'n', ',wF' ,"<cmd>lua require('fzf-lua').live_grep()<CR>"}
-
 
