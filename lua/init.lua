@@ -15,42 +15,55 @@ vim.cmd([[
 vim.g.python3_host_prog = '/home/sachint/VEnvs/nvim/bin/python'
 
 require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim' -- Package manager
-  use 'neomake/neomake'
+  -- Package manager
+  use 'wbthomason/packer.nvim' 
+  -- fzf.vim, written in lua
   use 'ibhagwan/fzf-lua'
+  -- Command Line fuzzy finder
   use { 'junegunn/fzf', run = './install --bin', }
-  use 'tpope/vim-fugitive' -- Git commands in nvim
-  use 'tpope/vim-rhubarb' -- Fugitive-companion to interact with github
+  -- Add git related info in the signs columns and popups
+  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
+  -- Git commands in nvim
+  use 'tpope/vim-fugitive'
+  -- Fugitive-companion to interact with github
+  --use 'tpope/vim-rhubarb' 
+  -- Operate on an Indented Block of Lines
   use 'michaeljsmith/vim-indent-object'
-  -- inject LSP diagnostics, code actions, and more via Lua
-  use 'nvim-lua/plenary.nvim'
-  use {"jose-elias-alvarez/null-ls.nvim", requires = { "nvim-lua/plenary.nvim" }}
-
-  --use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
+  -- "gc" to comment visual regions/lines
+  use 'numToStr/Comment.nvim'   
   --use 'ludovicchabant/vim-gutentags' -- Automatic tags management
-  -- UI to select things (files, grep results, open buffers...)
+
+  -- Themes
   use 'ghifarit53/tokyonight-vim'
   use 'NLKNguyen/papercolor-theme'
 
-  use {'nvim-lualine/lualine.nvim', requires = { 'kyazdani42/nvim-web-devicons', opt = true }} -- Fancier statusline
+  -- Adds file type icons to Vim plugins
   use 'kyazdani42/nvim-web-devicons'
+  -- Statusline written in Lua
+  use {'nvim-lualine/lualine.nvim', requires = { 'kyazdani42/nvim-web-devicons', opt = true }} -- Fancier statusline
+  -- A snazzy bufferline for Neovim
   use {'akinsho/bufferline.nvim', tag = "*", requires = 'kyazdani42/nvim-web-devicons'}
+  -- Delete buffers and close files in Vim without closing your windows or messing up your layout
   use 'moll/vim-bbye'
-
-
   -- Add indentation guides even on blank lines
   use 'lukas-reineke/indent-blankline.nvim'
-  -- Add git related info in the signs columns and popups
-  use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   -- Highlight, edit, and navigate code using a fast incremental parsing library
   use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
   -- Additional textobjects for treesitter
   use 'nvim-treesitter/nvim-treesitter-textobjects'
-  use 'neovim/nvim-lspconfig' -- Collection of configurations for built-in LSP client
-  use 'hrsh7th/nvim-cmp' -- Autocompletion plugin
+  -- inject LSP diagnostics, code actions, and more via Lua
+  use 'nvim-lua/plenary.nvim'
+
+  -- inject LSP diagnostics, code actions, and more
+  use {"jose-elias-alvarez/null-ls.nvim", requires = { "nvim-lua/plenary.nvim" }}
+  -- Collection of configurations for built-in LSP client
+  use 'neovim/nvim-lspconfig' 
+  use 'hrsh7th/nvim-cmp' 
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-cmdline'
   use 'hrsh7th/cmp-nvim-lsp'
   use 'saadparwaiz1/cmp_luasnip'
-  use 'L3MON4D3/LuaSnip' -- Snippets plugin
+  use 'L3MON4D3/LuaSnip' 
   use "rafamadriz/friendly-snippets"
 
 end)
@@ -78,29 +91,29 @@ vim.o.smartcase = true
 vim.o.updatetime = 250
 vim.wo.signcolumn = 'yes'
 
---Set colorscheme
---vim.g['tokyonight_style'] = 'storm'
-
 vim.o.termguicolors = true
 vim.o.background= 'dark'
-vim.cmd [[colorscheme PaperColor]]
 
+--Set colorscheme
+--vim.g['tokyonight_style'] = 'storm'
+vim.cmd [[colorscheme PaperColor]]
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
+
 -- tabs and space handling
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.smarttab = true
 vim.opt.expandtab= true
-
+vim.opt.foldcolumn = '2'
 
 --Set statusbar
 require('lualine').setup {
   options = {
     icons_enabled = true,
-    theme = 'onedark',
+    theme = 'gruvbox_dark',
     component_separators = { left = '', right = ''},
     section_separators = { left = '', right = ''},
     disabled_filetypes = {},
@@ -127,6 +140,79 @@ require('lualine').setup {
   extensions = {}
 }
 
+-- commenting plugin for neovim
+require('Comment').setup(
+ {
+    ---Add a space b/w comment and the line
+    ---@type boolean|fun():boolean
+    padding = true,
+
+    ---Whether the cursor should stay at its position
+    ---NOTE: This only affects NORMAL mode mappings and doesn't work with dot-repeat
+    ---@type boolean
+    sticky = true,
+
+    ---Lines to be ignored while comment/uncomment.
+    ---Could be a regex string or a function that returns a regex string.
+    ---Example: Use '^$' to ignore empty lines
+    ---@type string|fun():string
+    ignore = nil,
+
+    ---LHS of toggle mappings in NORMAL + VISUAL mode
+    ---@type table
+    toggler = {
+        ---Line-comment toggle keymap
+        line = '<Leader>cc',
+        ---Block-comment toggle keymap
+        block = 'gbc',
+    },
+
+    ---LHS of operator-pending mappings in NORMAL + VISUAL mode
+    ---@type table
+    opleader = {
+        ---Line-comment keymap
+        line = '<Leader>c',
+        ---Block-comment keymap
+        block = 'gb',
+    },
+
+    ---LHS of extra mappings
+    ---@type table
+    extra = {
+        ---Add comment on the line above
+        above = 'gcO',
+        ---Add comment on the line below
+        below = 'gco',
+        ---Add comment at the end of line
+        eol = 'gcA',
+    },
+
+    ---Create basic (operator-pending) and extended mappings for NORMAL + VISUAL mode
+    ---NOTE: If `mappings = false` then the plugin won't create any mappings
+    ---@type boolean|table
+    mappings = {
+        ---Operator-pending mapping
+        ---Includes `gcc`, `gbc`, `gc[count]{motion}` and `gb[count]{motion}`
+        ---NOTE: These mappings can be changed individually by `opleader` and `toggler` config
+        basic = true,
+        ---Extra mapping
+        ---Includes `gco`, `gcO`, `gcA`
+        extra = true,
+        ---Extended mapping
+        ---Includes `g>`, `g<`, `g>[count]{motion}` and `g<[count]{motion}`
+        extended = false,
+    },
+
+    ---Pre-hook, called before commenting the line
+    ---@type fun(ctx: Ctx):string
+    pre_hook = nil,
+
+    ---Post-hook, called after commenting is done
+    ---@type fun(ctx: Ctx)
+    post_hook = nil,
+}
+)
+
 -- Key bIndings helper function
 local map = function(key)
   -- get the extra options
@@ -146,10 +232,15 @@ local map = function(key)
   end
 end
 
---Remap space as leader key
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
-vim.g.mapleader = ','
-vim.g.maplocalleader = ','
+
+--Remap space as leader key
+-- vim.g.mapleader = "\\"
+-- vim.g.maplocalleader = "\\"
+
+vim.api.nvim_set_keymap('n', ']b', "<cmd>BufferLineCycleNext<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '[b', "<cmd>BufferLineCyclePrev<CR>", { noremap = true, silent = true })
+
 
 --Remap for dealing with word wrap
 vim.api.nvim_set_keymap('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
@@ -243,6 +334,19 @@ require("bufferline").setup{
   },
 }
 
+-- For buffer words
+require('cmp').setup({
+  sources = {
+    { name = 'buffer' },
+  },
+})
+--For command cmp 
+require'cmp'.setup.cmdline('/', {
+  sources = {
+    { name = 'buffer' }
+  }
+})
+
 -- Gitsigns
 require('gitsigns').setup {
   signs = {
@@ -307,63 +411,6 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
---require('Comment').setup(
---    {
---        padding = true,
---        sticky = true,
---        ignore = nil,
---        ---LHS of toggle mappings in NORMAL + VISUAL mode
---        toggler = {
---            ---Line-comment toggle keymap
---            line = 'gcc',
---            ---Block-comment toggle keymap
---            block = 'gbc',
---        },
---        ---LHS of operator-pending mappings in NORMAL + VISUAL mode
---        opleader = {
---            ---Line-comment keymap
---            line = 'gc',
---            ---Block-comment keymap
---            block = 'gb',
---        },
---
---        ---LHS of extra mappings
---        ---@type table
---        extra = {
---            ---Add comment on the line above
---            above = 'gcO',
---            ---Add comment on the line below
---            below = 'gco',
---            ---Add comment at the end of line
---            eol = 'gcA',
---        },
---
---        ---Create basic (operator-pending) and extended mappings for NORMAL + VISUAL mode
---        ---@type table
---        mappings = {
---            ---Operator-pending mapping
---            ---Includes `gcc`, `gbc`, `gc[count]{motion}` and `gb[count]{motion}`
---            ---NOTE: These mappings can be changed individually by `opleader` and `toggler` config
---            basic = true,
---            ---Extra mapping
---            ---Includes `gco`, `gcO`, `gcA`
---            extra = true,
---            ---Extended mapping
---            ---Includes `g>`, `g<`, `g>[count]{motion}` and `g<[count]{motion}`
---            extended = false,
---        },
---
---        ---Pre-hook, called before commenting the line
---        ---@type fun(ctx: Ctx):string
---        pre_hook = nil,
---
---        ---Post-hook, called after commenting is done
---        ---@type fun(ctx: Ctx)
---        post_hook = nil,
---    }
---)
-
-
 -- Diagnostic keymaps
 vim.api.nvim_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
@@ -379,9 +426,9 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+--  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+--  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+--  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
@@ -408,7 +455,7 @@ end
 require("lspconfig").tsserver.setup({
     on_attach = function(client)
         client.resolved_capabilities.document_formatting = false
-        --client.resolved_capabilities.document_range_formatting = false
+        client.resolved_capabilities.document_range_formatting = false
     end,
 })
 
@@ -442,8 +489,10 @@ cmp.setup {
        documentation = cmp.config.window.bordered(),
     },
   mapping = {
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
+    ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
+    --['<C-p>'] = cmp.mapping.select_prev_item(),
+    --['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
@@ -486,12 +535,8 @@ cmp.setup {
 
 -- Setup Null ls and register source 
 local null_ls = require("null-ls")
-
 local formatting = null_ls.builtins.formatting
 local diagnostic = null_ls.builtins.diagnostics
-
-vim.api.nvim_buf_set_keymap(0,'n', '<Space>f', ':Format<CR>', { noremap = true, silent = true })
-
 null_ls.setup({
     debug = true,
     sources = {
@@ -502,31 +547,32 @@ null_ls.setup({
         diagnostic.eslint,
         diagnostic.flake8,
     },
-    on_attach = function(client)
-      if client.resolved_capabilities.document_formatting then
-            vim.cmd([[
-            augroup LspFormatting
-                autocmd! * <buffer>
-                autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting()
-            augroup END
-            ]])
-      end
-        if client.resolved_capabilities.document_range_formatting then
-            vim.cmd("xnoremap <silent><buffer> <Space>f :lua vim.lsp.buf.range_formatting()<CR>")
-        end
-    end,
+     on_attach = function(client)
+       -- if client.resolved_capabilities.document_formatting then
+       --       vim.cmd([[
+       --       augroup LspFormatting
+       --           autocmd! * <buffer>
+       --           autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting()
+       --       augroup END
+       --       ]])
+       -- end
+         if client.resolved_capabilities.document_range_formatting then
+             vim.cmd("xnoremap <silent><buffer> <Space>f :lua vim.lsp.buf.range_formatting()<CR>")
+         end
+     end,
 })
 
-
+-- vim.api.nvim_set_keymap('n', '<Space>f', '<cmd>Format<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Space>f', '<cmd>lua vim.lsp.buf.formatting_seq_sync()<CR>', { noremap = true, silent = true })
 --vim.api.nvim_set_keymap('n', '<leader>d', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
 
 -- Additional Key bindings
 map {'n', '//', ':noh<CR>'}
 
 -- file finder mapping
-map {'n', ',f' ,"<cmd>lua require('fzf-lua').files()<CR>"}
-map {'n', ',o' ,"<cmd>lua require('fzf-lua').oldfiles()<CR>"}
-map {'n', ',wg' ,"<cmd>lua require('fzf-lua').grep()<CR>"}
-map {'n', ',wf' ,"<cmd>lua require('fzf-lua').grep_cword()<CR>"}
-map {'n', ',wF' ,"<cmd>lua require('fzf-lua').live_grep()<CR>"}
+map {'n', '<Leader>f' ,"<cmd>lua require('fzf-lua').files()<CR>"}
+map {'n', '<Leader>o' ,"<cmd>lua require('fzf-lua').oldfiles()<CR>"}
+map {'n', '<Leader>wg' ,"<cmd>lua require('fzf-lua').grep()<CR>"}
+map {'n', '<Leader>wf' ,"<cmd>lua require('fzf-lua').grep_cword()<CR>"}
+map {'n', '<Leader>wF' ,"<cmd>lua require('fzf-lua').live_grep()<CR>"}
 
