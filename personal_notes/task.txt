@@ -1,0 +1,99 @@
+ANimal Farm novel
+
+techsaroj30@gmail.com Dev@#123
+
+
+
+s.thapa2@codavatar.tech okcarT@2021
+
+bitrujegne@biyac.com
+Space@#123
+
+diwaker.ghimire+a3@codavatar.tech
+Pa$$w0rd@9898
+
+https://updates.timetracko.com/release/
+
+Username: appuser
+
+Password: squiggly&ANIMATING
+08:17
+Username: bitrujegne@biyac.com
+08:17
+Password: Space@#123
+
+https://github.com/shopify/toxiproxy
+toxiproxy-cli toxic add <proxy> -t latency -a latency=5000
+$ curl -v --header 'Host: <upstream>' 127.0.0.1:8080/api
+toxiproxy-cli inspect <proxy>
+
+Kill port
+$ sudo lsof -i -P -n
+$ sudo lsof -i -P -n | grep LISTEN
+lsof -i:8080
+To kill any process listening to the port 8080:
+
+kill $(lsof -t -i:8080)
+or more violently:
+
+kill -9 $(lsof -t -i:8080)
+
+curl --header "Content-Type: application/json" --request POST --data '{"data": {"details": {"kind": "classic", "login": "asd", "password": "asd"}, "client": "desktop"}}' localhost:8080/api/v2/user/session
+curl -k --header "Content-Type: application/json" --request POST --data '{"data": {"details": {"kind": "classic", "login": "asd@asd.com", "password": "asd"}, "client": "desktop"}}' https://localhost:8080/api/v2/user/session
+curl -k --header "Content-Type: application/json" --request POST --data '{"data": {"details": {"kind": "classic", "login": "bitrujegne@biyac.com", "password": "Pa$$w0rd@9898"}, "client": "desktop"}}' https://localhost:8080/api/v2/user/session
+
+Task TImer FLow
+controller.updateActiveTaskStatus(projectId, taskId
+controller	state.updateActiveTaskStatus - cycle_active_task
+state		cycleA_active_task - start_task - activetask.timer/activetask.is_active
+store		observe_active_task_Status/observe_active_task_timer_updated
+store		observe_active_task_status() active_task_updated/trigger_active_task
+manger		trigger_active_task_ agent.on_task_status_updated
+agent		do_housekeeping...
+manger		on_state_housekeeping
+
+
+http_request	state.updateAuth 
+state		auth.authid = v authtoken = v
+storemanger	observeIsAuthorized - signal.after_user_authorized
+manager		after_user_atuthorized - do_http_project_list - http.hanlde_prokject
+
+		    Windows                                         linux
+Chrome		A/L/G/C/U/D/histr..sqlite /D/Session/Sess..bin	.conf/G/D/history..sqlite /D/Session/ses..bin
+Firefox		A/R/M/F/P/bvg..def/ses-back/rec..lz4jso		    mozilla/firefox/...default/ses-backup/rec..lz4json
+Vivaldi		A/L/V/U/D/H..sqlite  ..D/Session/Sess..bin		.config/vivaldi/D/history.sqlite .config/vivaldi/D/Session/ses..bin 	[
+Edge		A/L/M/E/U/D/H..sqlite  D/Session/Sess..bin
+
+Bad, , saucy, ,crush, rich kids, , loud 
+
+yas
+so strange
+rich kids intro
+
+
+
+Lullaby (Cinco Lobitos)
+Alcarràs
+Official Competition
+Top Gun Maverick
+Love and Leashes
+Petite Maman
+As They Made Us
+Good Luck to You, Leo Grande
+Would It Kill You to Laugh?
+The Roundup
+The Stars at Noon 8
+Holy Spider 7.8
+As Bestas
+Icarus
+DECISION TO LEAVE
+Boiling Point
+The Innocents
+Ambulance
+Happening
+The Bombardment / The Shadow In My Eye
+Official Competition
+
+
+
+

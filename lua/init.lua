@@ -32,6 +32,8 @@ require('packer').startup(function(use)
   -- "gc" to comment visual regions/lines
   use 'numToStr/Comment.nvim'   
   --use 'ludovicchabant/vim-gutentags' -- Automatic tags management
+  -- Autopair plugin for Neovim 
+  use 'windwp/nvim-autopairs'
 
   -- Themes
   use 'ghifarit53/tokyonight-vim'
@@ -68,11 +70,17 @@ require('packer').startup(function(use)
 
 end)
 
+local BUFFER = vim.bo
+local GLOBAL = vim.o
+local WINDOW = vim.wo
+
 --Set highlight on search
 vim.o.hlsearch = true 
 
 --Make line numbers default
 vim.wo.number = false
+
+vim.wo.cursorline = false 
 
 --Enable mouse mode
 vim.o.mouse = 'a'
@@ -97,6 +105,7 @@ vim.o.background= 'dark'
 --Set colorscheme
 --vim.g['tokyonight_style'] = 'storm'
 vim.cmd [[colorscheme PaperColor]]
+-- vim.cmd[[highlight CursorLine cterm=NONE ctermbg=Cyan ctermfg=blue guibg=DarkGreen guifg=white]]
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
@@ -114,8 +123,8 @@ require('lualine').setup {
   options = {
     icons_enabled = true,
     theme = 'gruvbox_dark',
-    component_separators = { left = '', right = ''},
-    section_separators = { left = '', right = ''},
+    component_separators = { left = ' ', right = ' '},
+    section_separators = { left = ' ', right = ' '},
     disabled_filetypes = {},
     always_divide_middle = true,
     globalstatus = false,
@@ -123,18 +132,18 @@ require('lualine').setup {
   sections = {
     lualine_a = {'mode'},
     lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {'filename'},
+    lualine_c = {},
     lualine_x = {'encoding', 'fileformat', 'filetype'},
     lualine_y = {'progress'},
     lualine_z = {'location'}
   },
   inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {'filename'},
-    lualine_x = {'location'},
-    lualine_y = {},
-    lualine_z = {}
+    -- lualine_a = {},
+    -- lualine_b = {},
+    lualine_c = {},
+    lualine_x = {},
+    -- lualine_y = {},
+    -- lualine_z = {}
   },
   tabline = {},
   extensions = {}
@@ -212,59 +221,18 @@ require('Comment').setup(
     post_hook = nil,
 }
 )
-
--- Key bIndings helper function
-local map = function(key)
-  -- get the extra options
-  local opts = {noremap = true}
-  for i, v in pairs(key) do
-    if type(i) == 'string' then opts[i] = v end
-  end
-
-  -- basic support for buffer-scoped keybindings
-  local buffer = opts.buffer
-  opts.buffer = nil
-
-  if buffer then
-    vim.api.nvim_buf_set_keymap(0, key[1], key[2], key[3], opts)
-  else
-    vim.api.nvim_set_keymap(key[1], key[2], key[3], opts)
-  end
-end
-
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
 
 --Remap space as leader key
 -- vim.g.mapleader = "\\"
 -- vim.g.maplocalleader = "\\"
 
-vim.api.nvim_set_keymap('n', ']b', "<cmd>BufferLineCycleNext<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '[b', "<cmd>BufferLineCyclePrev<CR>", { noremap = true, silent = true })
-
-
---Remap for dealing with word wrap
-vim.api.nvim_set_keymap('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
-vim.api.nvim_set_keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = true, expr = true, silent = true })
-
 --Bufferline 
 vim.api.nvim_set_keymap('n', '<Leader>q', "<cmd>Bdelete<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>Q', "<cmd>Bwipeout<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', ']b', "<cmd>BufferLineCycleNext<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '[b', "<cmd>BufferLineCyclePrev<CR>", { noremap = true, silent = true })
 
--- Highlight on yank
-vim.cmd [[
-  augroup YankHighlight
-    autocmd!
-    autocmd TextYankPost * silent! lua vim.highlight.on_yank()
-  augroup end
-]]
-
---Map blankline
-vim.g.indent_blankline_char = '┊'
-vim.g.indent_blankline_filetype_exclude = { 'help', 'packer' }
-vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
-vim.g.indent_blankline_show_trailing_blankline_indent = false
-
--- Budfferline
 require("bufferline").setup{
   options = {
     numbers = "none", -- | "ordinal" | "buffer_id" | "both" | function({ ordinal, id, lower, raise }): string,
@@ -332,6 +300,32 @@ require("bufferline").setup{
     --   return buffer_a.modified > buffer_b.modified
     -- end
   },
+}
+
+
+--Remap for dealing with word wrap
+vim.api.nvim_set_keymap('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
+vim.api.nvim_set_keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = true, expr = true, silent = true })
+
+
+-- Highlight on yank
+vim.cmd [[
+  augroup YankHighlight
+    autocmd!
+    autocmd TextYankPost * silent! lua vim.highlight.on_yank()
+  augroup end
+]]
+
+--Map blankline
+vim.g.indent_blankline_char = '┊'
+vim.g.indent_blankline_filetype_exclude = { 'help', 'packer' }
+vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile' }
+vim.g.indent_blankline_show_trailing_blankline_indent = false
+
+-- nvim-autopairs setup
+require('nvim-autopairs').setup{
+  enable_check_bracket_line = false,
+  ignored_next_char = "[%w%.]" 
 }
 
 -- For buffer words
@@ -434,7 +428,7 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   --vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
-  vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
+  -- vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting_seq_sync()' ]]
   --vim.api.nvim_create_user_command("Format", vim.lsp.buf.formatting, {})
 
 end
@@ -544,6 +538,8 @@ null_ls.setup({
         formatting.prettier,
         formatting.black.with({extra_args = {"--fast"}}),
         formatting.isort,
+        formatting.djlint,
+        diagnostic.djlint,
         diagnostic.eslint,
         diagnostic.flake8,
     },
@@ -563,8 +559,27 @@ null_ls.setup({
 })
 
 -- vim.api.nvim_set_keymap('n', '<Space>f', '<cmd>Format<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Space>f', '<cmd>lua vim.lsp.buf.formatting_seq_sync()<CR>', { noremap = true, silent = true })
 --vim.api.nvim_set_keymap('n', '<leader>d', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Space>f', '<cmd>lua vim.lsp.buf.formatting_seq_sync()<CR>', { noremap = true, silent = true })
+
+-- Key bIndings helper function
+local map = function(key)
+  -- get the extra options
+  local opts = {noremap = true}
+  for i, v in pairs(key) do
+    if type(i) == 'string' then opts[i] = v end
+  end
+
+  -- basic support for buffer-scoped keybindings
+  local buffer = opts.buffer
+  opts.buffer = nil
+
+  if buffer then
+    vim.api.nvim_buf_set_keymap(0, key[1], key[2], key[3], opts)
+  else
+    vim.api.nvim_set_keymap(key[1], key[2], key[3], opts)
+  end
+end
 
 -- Additional Key bindings
 map {'n', '//', ':noh<CR>'}
