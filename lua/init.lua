@@ -34,10 +34,17 @@ require('packer').startup(function(use)
   --use 'ludovicchabant/vim-gutentags' -- Automatic tags management
   -- Autopair plugin for Neovim 
   use 'windwp/nvim-autopairs'
+  -- Automatically highlighting other uses of the word under the cursor
+  use'RRethy/vim-illuminate'
+  -- Console file manager with VI key bindings.
+  use 'francoiscabrol/ranger.vim'
+  use 'rbgrouleff/bclose.vim'
 
   -- Themes
   use 'ghifarit53/tokyonight-vim'
   use 'NLKNguyen/papercolor-theme'
+  --use "EdenEast/nightfox.nvim" 
+  --use { "catppuccin/nvim", as = "catppuccin" }
 
   -- Adds file type icons to Vim plugins
   use 'kyazdani42/nvim-web-devicons'
@@ -102,9 +109,16 @@ vim.wo.signcolumn = 'yes'
 vim.o.termguicolors = true
 vim.o.background= 'dark'
 
+vim.g['ranger_map_keys'] = 0
+
 --Set colorscheme
 --vim.g['tokyonight_style'] = 'storm'
 vim.cmd [[colorscheme PaperColor]]
+vim.cmd [[colorscheme PaperColor]]
+
+
+vim.g['lightline#bufferline#shorten_path'] =  1
+
 -- vim.cmd[[highlight CursorLine cterm=NONE ctermbg=Cyan ctermfg=blue guibg=DarkGreen guifg=white]]
 
 -- Set completeopt to have a better completion experience
@@ -122,7 +136,7 @@ vim.opt.foldcolumn = '2'
 require('lualine').setup {
   options = {
     icons_enabled = true,
-    theme = 'gruvbox_dark',
+    theme = 'papercolor_light',
     component_separators = { left = ' ', right = ' '},
     section_separators = { left = ' ', right = ' '},
     disabled_filetypes = {},
@@ -243,8 +257,7 @@ require("bufferline").setup{
     -- NOTE: this plugin is designed with this icon in mind,
     -- and so changing this is NOT recommended, this is intended
     -- as an escape hatch for people who cannot bear it for whatever reason
-    indicator_icon = "│",
-    -- indicator_icon = "▎",
+    indicator_icon = "▎",
     buffer_close_icon = '',
     modified_icon = "●",
     close_icon = "",
@@ -341,6 +354,13 @@ require'cmp'.setup.cmdline('/', {
   }
 })
 
+-- illuminate Configuration
+require'lspconfig'.gopls.setup {
+  on_attach = function(client)
+    -- [[ other on_attach code ]]
+    require 'illuminate'.on_attach(client)
+  end,
+}
 -- Gitsigns
 require('gitsigns').setup {
   signs = {
@@ -405,8 +425,11 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
+-- Ranger mapping
+vim.api.nvim_set_keymap('n', '<leader>e', ':Ranger<CR>', { noremap = true, silent = true })
+
 -- Diagnostic keymaps
-vim.api.nvim_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>E', '<cmd>lua vim.diagnostic.open_float()<cr>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>d', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
@@ -435,10 +458,11 @@ end
 
 -- nvim-cmp supports additional completion capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Enable the following language servers
-local servers = { 'pyright','tsserver'}
+local servers = { 'pyright'}
+-- local servers = { 'pyright','tsserver'}
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
     on_attach = on_attach,
@@ -448,8 +472,8 @@ end
 
 require("lspconfig").tsserver.setup({
     on_attach = function(client)
-        client.resolved_capabilities.document_formatting = false
-        client.resolved_capabilities.document_range_formatting = false
+        client.server_capabilities.documentFormattingProvider= false
+        client.server_capabilities.document_range_formatting = false
     end,
 })
 
@@ -534,25 +558,26 @@ local diagnostic = null_ls.builtins.diagnostics
 null_ls.setup({
     debug = true,
     sources = {
-        --formatting.stylua,
-        formatting.prettier,
-        formatting.black.with({extra_args = {"--fast"}}),
+        -- formatting.stylua,
+        -- formatting.prettier,
+        -- formatting.black.with({extra_args = {"--stdin-filename","--preview"}}),
         formatting.isort,
-        formatting.djlint,
-        diagnostic.djlint,
-        diagnostic.eslint,
+        formatting.black.with({extra_args = {"-l","79"}}),
+        -- formatting.djlint,
+        -- diagnostic.djlint,
+        -- diagnostic.eslint,
         diagnostic.flake8,
     },
      on_attach = function(client)
-       -- if client.resolved_capabilities.document_formatting then
-       --       vim.cmd([[
-       --       augroup LspFormatting
-       --           autocmd! * <buffer>
-       --           autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting()
-       --       augroup END
-       --       ]])
-       -- end
-         if client.resolved_capabilities.document_range_formatting then
+       if client.server_capabilities.document_formatting then
+             vim.cmd([[
+             augroup LspFormatting
+                 autocmd! * <buffer>
+                 autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting()
+             augroup END
+             ]])
+       end
+         if client.server_capabilities.document_range_formatting then
              vim.cmd("xnoremap <silent><buffer> <Space>f :lua vim.lsp.buf.range_formatting()<CR>")
          end
      end,
@@ -560,7 +585,9 @@ null_ls.setup({
 
 -- vim.api.nvim_set_keymap('n', '<Space>f', '<cmd>Format<CR>', { noremap = true, silent = true })
 --vim.api.nvim_set_keymap('n', '<leader>d', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Space>f', '<cmd>lua vim.lsp.buf.formatting_seq_sync()<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<Space>f', '<cmd>lua vim.lsp.buf.formatting_seq_sync()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Space>f', '<cmd>lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
+
 
 -- Key bIndings helper function
 local map = function(key)
