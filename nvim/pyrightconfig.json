@@ -1,0 +1,41 @@
+{
+  "include": [
+    "krispcall_stripe",
+    "krispcall_twilio",
+    "krispcall_components",
+    "krispcall_common"
+  ],
+
+  "pythonVersion": "3.10.9",
+  "pythonPlatform": "Linux",
+  "venvPath":"/home/sachin/Envs",
+  "venv":"Krispcall",
+    "executionEnvironments": [
+    {
+      "root": "krispcall_components",
+      "extraPaths": [
+        "krispcall_stripe",
+        "krispcall_twilio",
+        "krispcall_common"
+      ]
+    },
+    {
+      "root": "krispcall_common",
+      "extraPaths": [
+        "krispcall_stripe",
+        "krispcall_twilio",
+        "krispcall_components"
+      ]
+    },
+    {
+      "root": "webapi",
+      "extraPaths": [
+        "krispcall_stripe",
+        "krispcall_twilio",
+        "krispcall_common",
+        "krispcall_components"
+      ]
+    }
+  ]
+
+}
