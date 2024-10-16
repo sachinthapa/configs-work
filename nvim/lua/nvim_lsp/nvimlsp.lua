@@ -60,7 +60,21 @@ end
     debounce_text_changes = 150,
   }
   local util = require("lspconfig/util")
-
+  --
+  -- require('lspconfig')['gopls'].setup{
+  --   cmd = {"gopls", "serve"},
+  --   filetypes = {"go", "gomod"},
+  --   root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+  --   settings = {
+  --     gopls = {
+  --       analyses = {
+  --         unusedparams = true,
+  --       },
+  --       staticcheck = true,
+  --     },
+  --   },
+  -- }
+  --
   -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
   require('lspconfig')['pyright'].setup{
     on_attach = on_attach,
@@ -86,9 +100,9 @@ end
     --             -- Pyflakes = { enabled = false}
     --         }
     --     }
-    root_dir = function(fname)
-        return util.root_pattern("pyrightconfig.json")(fname) or
-          util.path.dirname(fname)
-    end
+    -- root_dir = function(fname)
+    --     return util.root_pattern("pyrightconfig.json")(fname) or
+    --       util.path.dirname(fname)
+    -- end
   }
 

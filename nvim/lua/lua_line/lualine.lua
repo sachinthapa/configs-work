@@ -2,7 +2,7 @@
 require('lualine').setup {
   options = {
     icons_enabled = true,
-    theme = 'papercolor_light',
+    theme = 'sachin_test',
     component_separators = { left = ' ', right = ' '},
     section_separators = { left = ' ', right = ' '},
     disabled_filetypes = {},

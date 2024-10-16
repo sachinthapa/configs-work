@@ -1,5 +1,9 @@
 --set completeopt=menu,menuone,noselect
 vim.o.completeopt = 'menuone,noselect'
+vim.api.nvim_set_hl(0, "MyPmenuSel", { bg = "#404040" , fg = "White", bold = true})
+-- vim.api.nvim_set_hl(0, "MyPmenu", { bg = "#212121" , fg = "#f7e6c7"})
+vim.api.nvim_set_hl(0, "MyPmenu", { bg = "#212121" , fg = "#474747"})
+vim.api.nvim_set_hl(0, "MyPmenuDoc", { bg = "#212121" , fg = "#474747"})
 
   -- Set up lspconfig.
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -7,6 +11,7 @@ vim.o.completeopt = 'menuone,noselect'
 
   -- Set up nvim-cmp.
   local lspkind = require('lsp_kind.lspkind')
+
   local cmp = require'cmp'
 
   cmp.setup({
@@ -30,9 +35,20 @@ vim.o.completeopt = 'menuone,noselect'
           end
         })
     },
+    
     window = {
-      completion = cmp.config.window.bordered(),
-      documentation = cmp.config.window.bordered(),
+      completion = cmp.config.window.bordered({
+        border = "single",
+        col_offset = -3,
+        padding = 0,
+        winhighlight = "Normal:MyPmenu,FloatBorder:MyPmenu,CursorLine:MyPmenuSel,Search:None",
+    }),
+      documentation = cmp.config.window.bordered({
+        border = "single",
+        col_offset = -3,
+        padding = 0,
+        winhighlight = "FloatBorder:MyPmenuDoc",
+      }),
     },
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },

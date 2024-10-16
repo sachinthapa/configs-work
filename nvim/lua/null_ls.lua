@@ -9,7 +9,7 @@ null_ls.setup({
         formatting.prettier,
         -- formatting.black.with({extra_args = {"--stdin-filename","--preview"}}),
         formatting.isort,
-        formatting.black.with({extra_args = {"-l","79","--preview"}}),
+        formatting.blue.with({extra_args = {"-l","79","--preview"}}),
         -- diagnostic.pylint.with({
         --   diagnostics_postprocess = function(diagnostic)
         --     diagnostic.code = diagnostic.message_id

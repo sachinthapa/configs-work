@@ -13,6 +13,8 @@ vim.cmd([[
   augroup end
 ]])
 
+vim.cmd([[set cmdheight=0]])
+
 vim.g.python3_host_prog = '/home/sachin/Envs/nvim/bin/python'
 -- vim.g.UltiSnipsSnippetDirectories = "~/.config/nvim/UltiSnips"
 
@@ -20,7 +22,8 @@ require('packer').startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim' 
   -- fzf.vim, written in lua
-  use 'ibhagwan/fzf-lua'
+  use { "ibhagwan/fzf-lua"}
+  -- use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   -- Command Line fuzzy finder
   use { 'junegunn/fzf', run = './install --bin', }
   -- Add git related info in the signs columns and popups
@@ -42,11 +45,13 @@ require('packer').startup(function(use)
   use 'francoiscabrol/ranger.vim'
   use 'rbgrouleff/bclose.vim'
   -- Themes
-  use 'ghifarit53/tokyonight-vim'
-  use 'NLKNguyen/papercolor-theme'
+  -- use 'ghifarit53/tokyonight-vim'
+  -- use 'NLKNguyen/papercolor-theme'
+  use 'ribru17/bamboo.nvim'
+
   --use "EdenEast/nightfox.nvim" 
-  --use { "catppuccin/nvim", as = "catppuccin" }
   -- Adds file type icons to Vim plugins
+  -- If you are using Packer
   use 'kyazdani42/nvim-web-devicons'
   -- Statusline written in Lua
   use {'nvim-lualine/lualine.nvim', requires = { 'kyazdani42/nvim-web-devicons', opt = true }} -- Fancier statusline
@@ -115,12 +120,8 @@ vim.o.background= 'dark'
 
 vim.g['ranger_map_keys'] = 0
 
---Set colorscheme
---vim.g['tokyonight_style'] = 'storm'
-vim.cmd [[colorscheme PaperColor]]
-vim.cmd [[colorscheme PaperColor]]
 
-
+vim.g['python_highlight_all'] =  1
 vim.g['lightline#bufferline#shorten_path'] =  1
 
 -- vim.cmd[[highlight CursorLine cterm=NONE ctermbg=Cyan ctermfg=blue guibg=DarkGreen guifg=white]]
@@ -128,7 +129,9 @@ vim.g['lightline#bufferline#shorten_path'] =  1
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
-
+--Set colorscheme
+-- vim.g['material_style'] = 'darker'
+-- vim.cmd [[colorscheme bamboo]]
 
 -- tabs and space handling
 vim.opt.tabstop = 4
@@ -138,6 +141,60 @@ vim.opt.smarttab = true
 vim.opt.expandtab= true
 vim.opt.foldcolumn = '2'
 
+require'nvim-treesitter.configs'.setup {
+  auto_install = false,
+  highlight = {
+    enable = true,
+
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+
+
+local c = require('colors')
+local util = require('bamboo_util')
+local light_fg = util.lighten(c.fg, 0.625)
+
+require('bamboo').setup {
+  style = 'vulgaris',
+  term_colors = true, -- Change terminal color as per the selected theme style
+  transparent = true, -- Show/hide background
+
+  cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
+
+  -- Lualine options --
+  lualine = {
+    transparent = true, -- lualine center bar transparency
+  },
+  highlights = {
+   -- make comments blend nicely with background, similar to other color schemes
+   -- ['@comment'] = { fg = '$grey' },
+   ['@comment'] = { fg = '$grey' },
+   ['@keyword'] = { fg = '$orange'},
+   ['@keyword.coroutine'] = { fg = '$orange'},
+   ['@keyword.operator'] = { fg = '$orange'},
+   ['@conditional'] = { fg = '$orange'},
+   ['@repeat'] = { fg = '$orange'},
+   ['@parameter'] = { fg = '$fg'},
+   ['@variable'] = { fg = '$fg'},
+   ['@variable.builtin'] ={ fg = '$fg'}, 
+   ['@variable.global'] = { fg = '$fg'},
+   ['@constant'] = { fg = '$green'},
+   ['@include'] = { fg = '$orange' },
+   -- ['@constant.builtin'] = { fg = '$green'},
+   -- ['@constant.macro'] ={ fg = '$green'}, 
+   ['@function.builtin'] = { fg = '$orange'},
+   ['@exception'] = { fg = '$orange'},
+   ['@field'] = { fg = '$fg'},
+   -- ['@function.macro'] = { fg = '$orange'},
+  },
+}
+require('bamboo').load()
+
 require('key_bindings.keybindings')
 require('lua_line.lualine')
 require('buffer_line.bufferline')
@@ -146,3 +203,4 @@ require('nvim_lsp.nvimlsp')
 require('comment')
 require('null_ls')
 require('autopairs')
+
