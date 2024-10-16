@@ -61,20 +61,21 @@ end
   }
   local util = require("lspconfig/util")
   --
-  -- require('lspconfig')['gopls'].setup{
-  --   cmd = {"gopls", "serve"},
-  --   filetypes = {"go", "gomod"},
-  --   root_dir = util.root_pattern("go.work", "go.mod", ".git"),
-  --   settings = {
-  --     gopls = {
-  --       analyses = {
-  --         unusedparams = true,
-  --       },
-  --       staticcheck = true,
-  --     },
-  --   },
-  -- }
-  --
+
+  require('lspconfig')['gopls'].setup{
+    cmd = {"gopls", "serve"},
+    filetypes = {"go", "gomod"},
+    root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+    settings = {
+      gopls = {
+        analyses = {
+          unusedparams = true,
+        },
+        staticcheck = true,
+      },
+    },
+  }
+
   -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
   require('lspconfig')['pyright'].setup{
     on_attach = on_attach,
@@ -90,6 +91,7 @@ end
             },
         }
     },
+
     --     pylsp = { 
     --         plugins = {
     --             pycodestyle =  { enabled = false },

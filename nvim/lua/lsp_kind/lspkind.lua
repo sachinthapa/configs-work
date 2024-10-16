@@ -104,7 +104,7 @@ function lspkind.init(opts)
 end
 
 lspkind.presets = kind_presets
-lspkind.symbol_map = kind_presets.default
+lspkind.symbol_map = kind_presets.codicons
 
 function lspkind.symbolic(kind, opts)
   local with_text = opt_with_text(opts)
